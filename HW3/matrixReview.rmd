@@ -1,0 +1,352 @@
+---
+title: "Matrix Algebra Review"
+author: "Eric Zivot"
+date: "Wednesday, June 30, 2016"
+output: slidy_presentation
+---
+
+```{r echo=FALSE}
+options(digits=3)
+```
+
+## Create Matrix Object
+
+You create matrices using the <code>matrix()</code> constructor function:
+
+```{r}
+args(matrix)
+# fill matrix by column (default)
+matA = matrix(data=c(1,2,3,4,5,6), nrow=2, ncol=3)
+matA
+class(matA)
+# fill matrix by row
+matA = matrix(data=c(1,2,3,4,5,6), nrow=2, ncol=3, byrow=TRUE)
+matA
+
+```
+
+## Assign Dimension Names
+
+You can name the rows and columns of a matrix using the functions <code>dimnames()</code>, <code>rownames()</code> and <code>colnames()</code>:
+
+```{r}
+dim(matA)
+dimnames(matA)
+dimnames(matA) = list(c("row1","row2"),c("col1","col2","col3"))
+matA
+colnames(matA) = c("Col1", "Col2", "Col3")
+rownames(matA) = c("Row1", "Row2")
+matA
+```
+
+## Subset Elements of a Matrix
+
+You can subset the elements of a matrix by position or name:
+
+```{r}
+# subset by position
+matA[1, 2]
+```
+
+```{r}
+# subset by name
+matA["Row1", "Col1"]
+```
+
+You can extract entire rows or columns
+
+```{r}
+# extract first row
+matA[1, ]
+```
+
+```{r}
+# extract 2nd column
+matA[, 2]
+```
+
+## Subset Elements of a Matrix
+
+When you extract an entire row or column of a matrix, R drops the dimension attributes of the result. That is, what you get is a numeric vector and not a row or column matrix. To preserve the dimension attributes the optional argument <code>drop=FALSE</code>:
+
+```{r}
+# preserve dimension attributes using drop=FALSE
+matA[1, , drop=FALSE]
+matA[, 2, drop=FALSE]
+
+```
+
+## Create Vector Object
+
+Vectors in R do not have dimension attributes. They appear as row vectors but that is just how they are printed on screen.
+
+```{r}
+xvec = c(1,2,3)
+xvec
+class(xvec)
+dim(xvec)
+names(xvec) = c("x1", "x2", "x3")
+xvec
+
+```
+
+## Coerce Vector to Matrix
+
+```{r}
+# coerce vector to class matrix: note column vector is created
+xvec = as.matrix(xvec)
+xvec
+class(xvec)
+# create row vector
+xvec = c(1,2,3)
+xvec = matrix(xvec, nrow=1)
+xvec
+```
+
+Note: R has many <code>as.</code> functions for coercing the class of an object to another class. 
+
+## Transpose of Matrix
+
+Transposing a matrix interchanges rows and columns. The transpose function in R is <code>t()</code>:
+
+```{r}
+matA = matrix(data=c(1,2,3,4,5,6), nrow=2, ncol=3, 
+              byrow=TRUE)
+t(matA)
+xvec = c(1,2,3)
+t(xvec)
+
+```
+
+## Symmetric Matrix
+
+A symmetric matrix is equal to its transpose:
+
+```{r}
+
+matS = matrix(c(1,2,2,1),2,2)
+matS
+# check for symmetry
+matS == t(matS)
+
+```
+
+## Basic Matrix Operations (element by element)
+
+Element by element operations require that all matrices have the same dimension and apply to each element the matrices.
+
+```{r}
+matA = matrix(c(4,9,2,1),2,2, byrow=TRUE)
+matB = matrix(c(2,0,0,7),2,2, byrow=TRUE)
+matA
+matB
+
+```
+
+## Matrix Addition and Subtraction
+
+Matrix addition (<code>+</code>) and subtraction (<code>-</code>) are element by element operations:
+
+```{r}
+# matrix addition
+matC = matA + matB
+matC
+# matrix subtraction
+matC = matA - matB
+matC
+
+```
+
+## Scalar Multiplication
+
+Multipling a matrix by a scalar (single number) is an element by element operation:
+
+```{r}
+matA = matrix(c(3,-1,0,5), 2, 2, 
+              byrow=TRUE)
+matA
+matC = 2*matA
+matC
+
+```
+
+## Matrix Multiplication
+
+Matrix multiplication only works on conformable matrices:
+
+```{r}
+matA = matrix(1:4,2,2, byrow=TRUE)
+matB = matrix(c(1,2,1,3,4,2),2,3, byrow=TRUE)
+matA
+matB
+dim(matA)
+dim(matB)
+```
+
+## Matrix Multiplication (not element by element)
+
+In R, <code>%*%</code> performas matrix multiplication: 
+
+```{r}
+matC = matA%*%matB
+matC
+```
+
+The $(i,j)$ element of <code>matC</code> is the dot product of the i'th row of <code>matA</code> with the j'th column of <code>matB</code>
+
+Multiplying two non-conformable matrices results in an error:
+
+```{r}
+# here B%*%A doesn't work b/c A and B are not comformable
+# matB%*%matA
+# Error in matB %*% matA : non-conformable arguments
+```
+
+## Identity Matrix
+
+Create identity matrix of dimension 2 using the <code>diag()</code> function:
+
+```{r}
+matI = diag(2)
+matI
+```
+
+Multiplying a matrix by the identity matrix returns the original matrix:
+
+```{r}
+matA = matrix(c(1,2,3,4), 2, 2, byrow=TRUE)
+matI%*%matA
+matA%*%matI
+
+```
+
+## Diagonal Matrices
+
+Create a diagonal matrix with $c=(1,2,3)$ along the main diagonal.
+
+```{r}
+matD = diag(1:3)
+matD
+```
+
+## Matrix Inverse
+
+In R, the function <code>solve()</code> computes the inverse of a matrix:
+
+```{r}
+matA
+matA.inv = solve(matA)
+matA.inv
+matA%*%matA.inv
+matA.inv%*%matA
+
+```
+
+
+## Solving Systems of Linear Equations
+
+The solution of two linear equations in two unknows is at the intersection of the two lines:
+
+```{r}
+curve(1-x, 0, 1, lwd=2, ylab="y")
+abline(a=-1, b=2, lwd=2)
+title("x+y=1, 2x-y=1")
+
+```
+
+## Solving Systems of Linear Equations
+
+The system of linear equations can be expressed in matrix form as $Az = b$. The solution is $z = A^{-1}b$: 
+
+```{r}
+matA = matrix(c(1,1,2,-1), 2, 2, byrow=TRUE)
+vecB = c(1,1)
+matA.inv = solve(matA)
+z = matA.inv%*%vecB
+z
+
+```
+
+## Summation Using Matrix Algebra
+
+$$ \sum_{k=1}^{n}x_{k} = \mathbf{x}^{\prime}\mathbf{1} $$
+
+```{r}
+onevec = rep(1,3)
+xvec = c(1,2,3)
+# sum elements in x - returns 1 x 1 matrix
+t(xvec)%*%onevec
+# more efficient
+crossprod(xvec, onevec)
+# more efficient still - returns a number
+sum(xvec)
+
+```
+
+## Sum of Squares
+
+$$ \sum_{k=1}^{n}x_{k}^{2} = \mathbf{x}^{\prime}\mathbf{x} $$
+
+```{r}
+xvec
+t(xvec)%*%xvec
+# more efficient
+crossprod(xvec)
+# most efficient
+sum(xvec^2)
+
+```
+
+## Sum of Cross Products
+
+$$ \sum_{k=1}^{n}x_{k}y_{k} = \mathbf{x}^{\prime}\mathbf{y} $$
+
+```{r}
+yvec = 4:6
+xvec
+yvec
+t(xvec)%*%yvec
+crossprod(yvec, xvec)
+sum(xvec*yvec)
+```
+
+## Partitioned Matrices
+
+```{r}
+A11mat = matrix(c(1,2,5,6), 2, 2, byrow=TRUE)
+A12mat = matrix(c(3,4,7,8), 2, 2, byrow=TRUE)
+A21mat = matrix(c(9,10,13,14), 2, 2, byrow=TRUE)
+A22mat = matrix(c(11,12,15,16), 2, 2, byrow=TRUE)
+Amat = rbind(cbind(A11mat, A12mat), cbind(A21mat, A22mat))
+Amat
+```
+
+## Rank of a matrix
+
+```{r}
+library(Matrix)
+Amat = matrix(c(1,3,5,2,4,6), 2, 3, byrow=TRUE)
+as.numeric(rankMatrix(Amat))
+```
+
+## Cholesky Factorization
+
+```{r}
+Sigma = matrix(c(1, 0.75, 0.75, 1), 2, 2)
+Sigma
+```
+
+```{r}
+C = chol(Sigma)
+C
+t(C)%*%C
+```
+
+Singular correlation matrix
+
+```{r}
+Sigma = matrix(c(1, 1, 1, 1), 2, 2)
+Sigma
+chol(Sigma, pivot=TRUE)
+```
+

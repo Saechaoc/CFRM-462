@@ -1,0 +1,67 @@
+% Turabian Formatting for Research Papers Template, 2016/10/09
+%
+% Developed using the turabian-formatting package (2016/10/09), available through CTAN: http://www.ctan.org/pkg/turabian-formatting
+%
+% Additional document class formatting options:
+%
+% raggedright: ragged right formatting without hyphenations
+% authordate: support for the author-date citation style
+% endnotes: support for endnotes
+
+
+
+\documentclass{turabian-researchpaper}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes, ellipsis}
+
+% Specify paper size with geometry package
+\usepackage[pass, letterpaper]{geometry}
+
+% For citations, use the biblatex-chicago package
+\usepackage{biblatex-chicago}
+\addbibresource{works-cited.bib}
+
+
+% Information for title page
+\title{Turabian-formatted Research Paper:}
+\subtitle{A Template based on Turabian's \emph{A Manual for Writers}, 8th edition}
+\author{Author's Name}
+\course{Course}
+\date{\today}
+
+
+\begin{document}
+
+\maketitle
+
+
+\section{Introduction}
+
+Amazing, introductory ideas that provide unique insight into your field of interest and ``wows" your professor---formatted based on Kate L. Turabian's \emph{A Manual for Writers of Research Papers, Theses, and Dissertations} (8th edition).
+
+
+\section{An Interesting Section}
+
+Great thoughts that further your argument. This includes lots of strong evidence presented throughout several paragraphs, each accompanied by necessary citations.
+\begin{quotation}
+    \noindent Here is a block quotation---a passage from a text you found insightful and wanted to share with others. Maybe it is from a journal article, website, or book. Irrespective, it should support the argument being made.\footnote{A citation for the quoted material.}
+\end{quotation}
+Maybe a sentence or two that bring the argument and evidence together.\autocite[34]{example_source}
+
+
+\section{Another Insightful Section}
+
+More ideas that really make this a great paper. Maybe a footnote or two.\footnote{Some peripheral thoughts that belong in a note.}
+
+
+\section{Conclusions}
+
+At this point, you've changed everything (including your marks!). Time to wrap up!
+
+
+\clearpage
+\printbibliography
+
+\end{document}
